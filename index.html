@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTools Hub - Professional Productivity Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00d9ff;
+        }
+
+        .time-display {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .wide-section {
+            grid-column: 1 / -1;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #475569;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: #00d9ff;
+            box-shadow: 0 8px 25px -5px rgba(0, 217, 255, 0.1);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #00d9ff;
+            border-radius: 2px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .input, .textarea, .select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .input:focus, .textarea:focus, .select:focus {
+            outline: none;
+            border-color: #00d9ff;
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        .textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #00d9ff 0%, #0ea5e9 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #374151;
+            color: #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            box-shadow: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .result-area {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .game-area {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .word {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00d9ff;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .word-input {
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00d9ff;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: #00d9ff;
+            border-bottom-color: #00d9ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .url-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .url-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .url-item a {
+            color: #00d9ff;
+            text-decoration: none;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .url-item a:hover {
+            text-decoration: underline;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .color-swatch {
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            padding: 5px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            transition: transform 0.2s ease;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.05);
+            border-color: #00d9ff;
+        }
+
+        .password-strength {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .strength-weak { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .strength-medium { background: rgba(251, 191, 36, 0.1); color: #fbbf24; }
+        .strength-strong { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        .json-formatter {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #374151;
+            color: #d1d5db;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: #4b5563;
+        }
+
+        .success {
+            color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">DevTools Hub</div>
+            <div class="time-display" id="currentTime"></div>
+        </div>
+
+        <div class="main-grid">
+            <!-- JSON Formatter -->
+            <div class="card">
+                <h2>JSON Formatter</h2>
+                <div class="input-group">
+                    <textarea class="textarea" id="jsonInput" placeholder="Paste JSON here..."></textarea>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="formatJSON()">Format</button>
+                    <button class="btn-secondary" onclick="minifyJSON()">Minify</button>
+                    <button class="btn-secondary" onclick="validateJSON()">Validate</button>
+                </div>
+                <div class="json-formatter">
+                    <button class="copy-btn" onclick="copyJSON()">Copy</button>
+                    <div class="result-area" id="jsonOutput"></div>
+                </div>
+            </div>
+
+            <!-- Base64 Encoder/Decoder -->
+            <div class="card">
+                <h2>Base64 Tool</h2>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('encode')">Encode</button>
+                    <button class="tab-btn" onclick="switchTab('decode')">Decode</button>
+                </div>
+                <div class="tab-content active" id="encode-tab">
+                    <textarea class="textarea" id="textToEncode" placeholder="Enter text to encode..."></textarea>
+                    <button class="btn" onclick="encodeBase64()" style="margin-top: 10px;">Encode</button>
+                </div>
+                <div class="tab-content" id="decode-tab">
+                    <textarea class="textarea" id="textToDecode" placeholder="Enter Base64 to decode..."></textarea>
+                    <button class="btn" onclick="decodeBase64()" style="margin-top: 10px;">Decode</button>
+                </div>
+                <div class="result-area" id="base64Output"></div>
+            </div>
+
+            <!-- URL Manager -->
+            <div class="card">
+                <h2>URL Manager</h2>
+                <div class="input-group">
+                    <input type="text" class="input" id="urlInput" placeholder="https://example.com">
+                </div>
+                <div class="input-group">
+                    <input type="text" class="input" id="urlLabel" placeholder="Website Label">
+                </div>
+                <button class="btn" onclick="saveURL()">Save URL</button>
+                <ul class="url-list" id="urlList"></ul>
+            </div>
+
+            <!-- Color Palette Generator -->
+            <div class="card wide-section">
+                <h2>Color Palette Generator</h2>
+                <div class="btn-group">
+                    <button class="btn" onclick="generatePalette('monochromatic')">Monochromatic</button>
+                    <button class="btn" onclick="generatePalette('analogous')">Analogous</button>
+                    <button class="btn" onclick="generatePalette('complementary')">Complementary</button>
+                    <button class="btn" onclick="generatePalette('triadic')">Triadic</button>
+                    <button class="btn" onclick="generatePalette('random')">Random</button>
+                </div>
+                <div class="color-palette" id="colorPalette"></div>
+            </div>
+
+            <!-- Typing Speed Test -->
+            <div class="card">
+                <h2>Typing Speed Test</h2>
+                <div class="game-area">
+                    <div class="word" id="currentWord">Click Start to Begin</div>
+                    <input type="text" class="word-input input" id="typingInput" placeholder="Type the word above..." disabled>
+                    <div class="btn-group">
+                        <button class="btn" id="startTyping" onclick="startTypingTest()">Start Test</button>
+                        <button class="btn-secondary" onclick="resetTypingTest()">Reset</button>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value" id="wpm">0</div>
+                            <div class="stat-label">WPM</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="accuracy">100%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="timeLeft">60</div>
+                            <div class="stat-label">Time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hash Generator -->
+            <div class="card">
+                <h2>Hash Generator</h2>
+                <div class="input-group">
+                    <textarea class="textarea" id="hashInput" placeholder="Enter text to hash..."></textarea>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="generateHash('md5')">MD5</button>
+                    <button class="btn" onclick="generateHash('sha1')">SHA1</button>
+                    <button class="btn" onclick="generateHash('sha256')">SHA256</button>
+                </div>
+                <div class="result-area" id="hashOutput"></div>
+            </div>
+
+            <!-- Password Generator -->
+            <div class="card">
+                <h2>Password Generator</h2>
+                <div class="input-group">
+                    <label>Length: <span id="lengthDisplay">16</span></label>
+                    <input type="range" id="passwordLength" min="8" max="64" value="16" 
+                           oninput="document.getElementById('lengthDisplay').textContent = this.value">
+                </div>
+                <div class="input-group">
+                    <label><input type="checkbox" id="includeUpper" checked> Uppercase</label>
+                    <label><input type="checkbox" id="includeLower" checked> Lowercase</label>
+                    <label><input type="checkbox" id="includeNumbers" checked> Numbers</label>
+                    <label><input type="checkbox" id="includeSymbols"> Symbols</label>
+                </div>
+                <button class="btn" onclick="generatePassword()">Generate Password</button>
+                <div class="result-area" id="passwordOutput"></div>
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update time display
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('currentTime').textContent = `${dateString} ${timeString}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // JSON Formatter
+        function formatJSON() {
+            const input = document.getElementById('jsonInput').value;
+            const output = document.getElementById('jsonOutput');
+            
+            try {
+                const parsed = JSON.parse(input);
+                output.textContent = JSON.stringify(parsed, null, 2);
+                output.style.color = '#e2e8f0';
+            } catch (e) {
+                output.textContent = 'Invalid JSON: ' + e.message;
+                output.style.color = '#ef4444';
+            }
+        }
+
+        function minifyJSON() {
+            const input = document.getElementById('jsonInput').value;
+            const output = document.getElementById('jsonOutput');
+            
+            try {
+                const parsed = JSON.parse(input);
+                output.textContent = JSON.stringify(parsed);
+                output.style.color = '#e2e8f0';
+            } catch (e) {
+                output.textContent = 'Invalid JSON: ' + e.message;
+                output.style.color = '#ef4444';
+            }
+        }
+
+        function validateJSON() {
+            const input = document.getElementById('jsonInput').value;
+            const output = document.getElementById('jsonOutput');
+            
+            try {
+                JSON.parse(input);
+                output.textContent = '✅ Valid JSON';
+                output.style.color = '#22c55e';
+            } catch (e) {
+                output.textContent = '❌ Invalid JSON: ' + e.message;
+                output.style.color = '#ef4444';
+            }
+        }
+
+        function copyJSON() {
+            const output = document.getElementById('jsonOutput');
+            navigator.clipboard.writeText(output.textContent).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied';
+                btn.classList.add('success');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('success');
+                }, 2000);
+            });
+        }
+
+        // Base64 Tool
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function encodeBase64() {
+            const input = document.getElementById('textToEncode').value;
+            const output = document.getElementById('base64Output');
+            
+            try {
+                output.textContent = btoa(unescape(encodeURIComponent(input)));
+                output.style.color = '#e2e8f0';
+            } catch (e) {
+                output.textContent = 'Error encoding: ' + e.message;
+                output.style.color = '#ef4444';
+            }
+        }
+
+        function decodeBase64() {
+            const input = document.getElementById('textToDecode').value;
+            const output = document.getElementById('base64Output');
+            
+            try {
+                output.textContent = decodeURIComponent(escape(atob(input)));
+                output.style.color = '#e2e8f0';
+            } catch (e) {
+                output.textContent = 'Error decoding: ' + e.message;
+                output.style.color = '#ef4444';
+            }
+        }
+
+        // URL Manager
+        function saveURL() {
+            const url = document.getElementById('urlInput').value;
+            const label = document.getElementById('urlLabel').value || url;
+            
+            if (!url) return;
+            
+            let urls = JSON.parse(localStorage.getItem('savedUrls') || '[]');
+            urls.push({ url, label, id: Date.now() });
+            localStorage.setItem('savedUrls', JSON.stringify(urls));
+            
+            document.getElementById('urlInput').value = '';
+            document.getElementById('urlLabel').value = '';
+            
+            displayURLs();
+        }
+
+        function deleteURL(id) {
+            let urls = JSON.parse(localStorage.getItem('savedUrls') || '[]');
+            urls = urls.filter(item => item.id !== id);
+            localStorage.setItem('savedUrls', JSON.stringify(urls));
+            displayURLs();
+        }
+
+        function displayURLs() {
+            const urls = JSON.parse(localStorage.getItem('savedUrls') || '[]');
+            const list = document.getElementById('urlList');
+            
+            list.innerHTML = urls.map(item => `
+                <li class="url-item">
+                    <a href="${item.url}" target="_blank">${item.label}</a>
+                    <button class="delete-btn" onclick="deleteURL(${item.id})">×</button>
+                </li>
+            `).join('');
+        }
+
+        // Color Palette Generator
+        function generatePalette(type) {
+            const palette = document.getElementById('colorPalette');
+            let colors = [];
+            
+            const baseHue = Math.floor(Math.random() * 360);
+            
+            switch(type) {
+                case 'monochromatic':
+                    colors = generateMonochromatic(baseHue);
+                    break;
+                case 'analogous':
+                    colors = generateAnalogous(baseHue);
+                    break;
+                case 'complementary':
+                    colors = generateComplementary(baseHue);
+                    break;
+                case 'triadic':
+                    colors = generateTriadic(baseHue);
+                    break;
+                case 'random':
+                    colors = generateRandom();
+                    break;
+            }
+            
+            palette.innerHTML = colors.map(color => `
+                <div class="color-swatch" style="background-color: ${color};" onclick="copyColor('${color}')">
+                    ${color}
+                </div>
+            `).join('');
+        }
+
+        function generateMonochromatic(baseHue) {
+            return [50, 60, 70, 80, 90].map(lightness => 
+                `hsl(${baseHue}, 70%, ${lightness}%)`
+            );
+        }
+
+        function generateAnalogous(baseHue) {
+            return [-30, -15, 0, 15, 30].map(offset => 
+                `hsl(${(baseHue + offset + 360) % 360}, 70%, 60%)`
+            );
+        }
+
+        function generateComplementary(baseHue) {
+            return [baseHue, baseHue + 180, baseHue + 30, baseHue + 210, baseHue + 60].map(hue => 
+                `hsl(${hue % 360}, 70%, 60%)`
+            );
+        }
+
+        function generateTriadic(baseHue) {
+            return [baseHue, baseHue + 120, baseHue + 240, baseHue + 60, baseHue + 300].map(hue => 
+                `hsl(${hue % 360}, 70%, 60%)`
+            );
+        }
+
+        function generateRandom() {
+            return Array.from({length: 6}, () => 
+                `hsl(${Math.floor(Math.random() * 360)}, ${Math.floor(Math.random() * 50) + 50}%, ${Math.floor(Math.random() * 40) + 40}%)`
+            );
+        }
+
+        function copyColor(color) {
+            navigator.clipboard.writeText(color);
+        }
+
+        // Typing Speed Test
+        const words = ['javascript', 'programming', 'developer', 'function', 'variable', 'array', 'object', 'string', 'boolean', 'number', 'async', 'await', 'promise', 'callback', 'closure', 'prototype', 'inheritance', 'polymorphism', 'abstraction', 'encapsulation'];
+        let currentWordIndex = 0;
+        let startTime;
+        let testActive = false;
+        let correctWords = 0;
+        let totalWords = 0;
+        let testDuration = 60;
+        let timeRemaining = testDuration;
+
+        function startTypingTest() {
+            testActive = true;
+            currentWordIndex = 0;
+            correctWords = 0;
+            totalWords = 0;
+            timeRemaining = testDuration;
+            startTime = Date.now();
+            
+            document.getElementById('typingInput').disabled = false;
+            document.getElementById('typingInput').focus();
+            document.getElementById('startTyping').disabled = true;
+            
+            showNextWord();
+            startTimer();
+        }
+
+        function showNextWord() {
+            if (!testActive) return;
+            const word = words[Math.floor(Math.random() * words.length)];
+            document.getElementById('currentWord').textContent = word;
+            document.getElementById('typingInput').value = '';
+        }
+
+        function startTimer() {
+            const timer = setInterval(() => {
+                timeRemaining--;
+                document.getElementById('timeLeft').textContent = timeRemaining;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    endTest();
+                }
+            }, 1000);
+        }
+
+        function endTest() {
+            testActive = false;
+            document.getElementById('typingInput').disabled = true;
+            document.getElementById('startTyping').disabled = false;
+            document.getElementById('currentWord').textContent = 'Test Complete!';
+            
+            const wpm = Math.round((correctWords / testDuration) * 60);
+            const accuracy = totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 100;
+            
+            document.getElementById('wpm').textContent = wpm;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        function resetTypingTest() {
+            testActive = false;
+            document.getElementById('typingInput').disabled = true;
+            document.getElementById('typingInput').value = '';
+            document.getElementById('startTyping').disabled = false;
+            document.getElementById('currentWord').textContent = 'Click Start to Begin';
+            document.getElementById('wpm').textContent = '0';
+            document.getElementById('accuracy').textContent = '100%';
+            document.getElementById('timeLeft').textContent = '60';
+            timeRemaining = testDuration;
+        }
+
+        // Typing input handler
+        document.getElementById('typingInput').addEventListener('keydown', (e) => {
+            if (!testActive) return;
+            
+            if (e.key === 'Enter') {
+                const typed = e.target.value.trim();
+                const current = document.getElementById('currentWord').textContent;
+                
+                totalWords++;
+                if (typed === current) {
+                    correctWords++;
+                }
+                
+                const wpm = Math.round((correctWords / ((testDuration - timeRemaining) / 60)) || 0);
+                const accuracy = Math.round((correctWords / totalWords) * 100);
+                
+                document.getElementById('wpm').textContent = wpm;
+                document.getElementById('accuracy').textContent = accuracy + '%';
+                
+                showNextWord();
+            }
+        });
+
+        // Hash Generator (simplified versions)
+        async function generateHash(type) {
+            const input = document.getElementById('hashInput').value;
+            const output = document.getElementById('hashOutput');
+            
+            if (!input) {
+                output.textContent = 'Please enter text to hash';
+                return;
+            }
+            
+            // Simple hash functions (not cryptographically secure)
+            let hash;
+            switch(type) {
+                case 'md5':
+                    hash = simpleHash(input, 32);
+                    break;
+                case 'sha1':
+                    hash = simpleHash(input, 40);
+                    break;
+                case 'sha256':
+                    hash = simpleHash(input, 64);
+                    break;
+            }
+            
+            output.textContent = hash;
+        }
+
+        function simpleHash(str, length) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            
+            let result = Math.abs(hash).toString(16);
+            while (result.length < length) {
+                result = '0' + result;
+            }
+            return result.substring(0, length);
+        }
+
+        // Password Generator
+        function generatePassword() {
+            const length = document.getElementById('passwordLength').value;
+            const includeUpper = document.getElementById('includeUpper').checked;
+            const includeLower = document.getElementById('includeLower').checked;
+            const includeNumbers = document.getElementById('includeNumbers').checked;
+            const includeSymbols = document.getElementById('includeSymbols').checked;
+            
+            let charset = '';
+            if (includeUpper) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (includeLower) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (includeNumbers) charset += '0123456789';
+            if (includeSymbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            if (!charset) {
+                document.getElementById('passwordOutput').textContent = 'Please select at least one character type';
+                return;
+            }
+            
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            
+            document.getElementById('passwordOutput').textContent = password;
+            checkPasswordStrength(password);
+        }
+
+        function checkPasswordStrength(password) {
+            const strengthDiv = document.getElementById('passwordStrength');
+            let score = 0;
+            
+            // Length
+            if (password.length >= 8) score++;
+            if (password.length >= 12) score++;
+            if (password.length >= 16) score++;
+            
+            // Character types
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            // Patterns
+            if (!/(.)\1{2,}/.test(password)) score++; // No repeated characters
+            if (!/012|123|234|345|456|567|678|789|890|abc|bcd|cde/.test(password.toLowerCase())) score++; // No sequences
+            
+            let strength, className;
+            if (score < 4) {
+                strength = 'Weak - Consider adding more character types and length';
+                className = 'strength-weak';
+            } else if (score < 7) {
+                strength = 'Medium - Good but could be stronger';
+                className = 'strength-medium';
+            } else {
+                strength = 'Strong - Excellent password security';
+                className = 'strength-strong';
+            }
+            
+            strengthDiv.textContent = strength;
+            strengthDiv.className = 'password-strength ' + className;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayURLs();
+            generatePalette('random');
+        });
+
+        // Add some keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter to format JSON
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                if (document.activeElement === document.getElementById('jsonInput')) {
+                    formatJSON();
+                    e.preventDefault();
+                }
+            }
+            
+            // Escape to reset typing test
+            if (e.key === 'Escape' && testActive) {
+                resetTypingTest();
+            }
+        });
+
+        // Auto-save functionality for larger text areas
+        function autoSave(elementId, storageKey) {
+            const element = document.getElementById(elementId);
+            const savedValue = localStorage.getItem(storageKey);
+            
+            if (savedValue) {
+                element.value = savedValue;
+            }
+            
+            element.addEventListener('input', function() {
+                localStorage.setItem(storageKey, this.value);
+            });
+        }
+
+        // Initialize auto-save for JSON input
+        autoSave('jsonInput', 'jsonInputDraft');
+        autoSave('hashInput', 'hashInputDraft');
+
+        // Add click-to-copy functionality for results
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('result-area') || e.target.classList.contains('stat-value')) {
+                const text = e.target.textContent;
+                if (text && text.trim() && !text.includes('Error') && !text.includes('Invalid')) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        const originalBg = e.target.style.backgroundColor;
+                        e.target.style.backgroundColor = 'rgba(34, 197, 94, 0.2)';
+                        setTimeout(() => {
+                            e.target.style.backgroundColor = originalBg;
+                        }, 200);
+                    });
+                }
+            }
+        });
+
+        // Performance monitoring
+        const perfMonitor = {
+            start: Date.now(),
+            marks: {},
+            
+            mark(name) {
+                this.marks[name] = Date.now() - this.start;
+            },
+            
+            measure(name, startMark) {
+                const duration = this.marks[name] - (this.marks[startMark] || 0);
+                console.log(`${name}: ${duration}ms`);
+                return duration;
+            }
+        };
+
+        perfMonitor.mark('pageLoad');
+
+        // Add tooltips for better UX
+        const tooltips = {
+            'jsonInput': 'Paste JSON here. Use Ctrl+Enter to format quickly.',
+            'passwordLength': 'Recommended: 16+ characters for strong security',
+            'currentWord': 'Type the word shown here as fast as possible',
+            'colorPalette': 'Click any color to copy its value'
+        };
+
+        Object.entries(tooltips).forEach(([id, text]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.title = text;
+            }
+        });
+
+        // Add analytics for feature usage (privacy-friendly)
+        const analytics = {
+            features: JSON.parse(localStorage.getItem('featureUsage') || '{}'),
+            
+            track(feature) {
+                this.features[feature] = (this.features[feature] || 0) + 1;
+                localStorage.setItem('featureUsage', JSON.stringify(this.features));
+            },
+            
+            getStats() {
+                return this.features;
+            }
+        };
+
+        // Track feature usage
+        const originalFormatJSON = formatJSON;
+        formatJSON = function() {
+            analytics.track('jsonFormatter');
+            return originalFormatJSON.apply(this, arguments);
+        };
+
+        const originalGeneratePassword = generatePassword;
+        generatePassword = function() {
+            analytics.track('passwordGenerator');
+            return originalGeneratePassword.apply(this, arguments);
+        };
+
+        const originalStartTypingTest = startTypingTest;
+        startTypingTest = function() {
+            analytics.track('typingTest');
+            return originalStartTypingTest.apply(this, arguments);
+        };
+
+        // Service Worker registration for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                const swCode = `
+                    self.addEventListener('install', function(event) {
+                        self.skipWaiting();
+                    });
+                    
+                    self.addEventListener('fetch', function(event) {
+                        if (event.request.url.includes('devtools-hub')) {
+                            event.respondWith(
+                                caches.match(event.request).then(function(response) {
+                                    return response || fetch(event.request);
+                                })
+                            );
+                        }
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl).then(function(registration) {
+                    console.log('ServiceWorker registered');
+                }).catch(function(error) {
+                    console.log('ServiceWorker registration failed');
+                });
+            });
+        }
+
+        console.log('DevTools Hub loaded successfully');
+        perfMonitor.mark('scriptsLoaded');
+    </script>
+</body>
+</html>
